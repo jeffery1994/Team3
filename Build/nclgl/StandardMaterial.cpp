@@ -64,6 +64,9 @@ bool DrawPathMaterial::Apply()
 	glUniformMatrix4fv(glGetUniformLocation(shader->GetProgram(), "uProjViewMtx"), 1, GL_FALSE, (float*)&projViewMtx);
 	glUniformMatrix4fv(glGetUniformLocation(shader->GetProgram(), "uModelMtx"), 1, GL_FALSE, (float*)&renderNode->GetWorldTransform());
 	glUniform4fv(glGetUniformLocation(shader->GetProgram(), "uColor"), 1, (float*)&renderNode->GetColor());
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, graphicsPipeline->GetPathTex());
+	glUniform1i(glGetUniformLocation(shader->GetProgram(), "uPathTex"), 0);
 	return true;
 }
 

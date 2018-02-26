@@ -185,8 +185,8 @@ void GraphicsPipeline::LoadShaders()
 	}
 
 	shaders[SHADERTYPE::Draw_Path] = new Shader(
-		SHADERDIR"Common/EmptyVertex.glsl",
-		SHADERDIR"Common/ColorFragment.glsl");
+		SHADERDIR"Game/PathVertex.glsl",
+		SHADERDIR"Game/PathFragment.glsl");
 	if (!shaders[SHADERTYPE::Draw_Path]->LinkProgram())
 	{
 		NCLERROR("Could not link shader: Draw Path Renderer");
@@ -293,8 +293,14 @@ void GraphicsPipeline::UpdateAssets(int width, int height)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	//m_ShadowUBO._ShadowMapTex = glGetTextureHandleARB(m_ShadowTex);
 	//glMakeTextureHandleResidentARB(m_ShadowUBO._ShadowMapTex);
-}
 
+	if (!scoreBuffer) glGenBuffers(1, &scoreBuffer);
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, scoreBuffer);
+	glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint) * 4, NULL, GL_DYNAMIC_DRAW);
+	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, scoreBuffer);
+	glBindFramebuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+}
+	
 
 void GraphicsPipeline::DebugRender()
 {
@@ -642,6 +648,12 @@ void GraphicsPipeline::RenderPath()
 		RecursiveAddToPathRenderLists(playerRenderNodes[i]);
 	}
 
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, scoreBuffer);
+
+	GLuint a[4] = { 0,0,0,0 };
+	glBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * 4, a);
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+
 	Matrix4 projMatrix2 = Matrix4::Orthographic(-40, 40, -groundSize.x, groundSize.x, -groundSize.y, groundSize.y);
 	Matrix4	viewMatrix2 = Matrix4::Rotation(90, Vector3(1, 0, 0)) *Matrix4::Translation(Vector3(0.0f,-20.0f,0.0f));
 	glViewport(0, 0, (GLsizei)(groundSize.x*PIXELPERSIZE), (GLsizei)(groundSize.y*PIXELPERSIZE));
@@ -658,19 +670,16 @@ void GraphicsPipeline::RenderPath()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	projViewMatrix = temp;
 
-	//removes destroyed projectiles from the playerRenderNodes
-	//for (std::vector<RenderNode*>::iterator itr = playerRenderNodes.begin(); itr != playerRenderNodes.end(); itr++)
-	//{
+	GLuint userCounters[4];
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, scoreBuffer);
+	// again we map the buffer to userCounters, but this time for read-only access
+	glGetBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * 4, userCounters);
+	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+	scores[0] += userCounters[0];
+	scores[1] += userCounters[1];
+	scores[2] += userCounters[2];
+	scores[3] += userCounters[3];
 
-	//	PlayerRenderNode * tempPRN = (PlayerRenderNode*)(*itr)->GetChild();
-	//	if (tempPRN)
-	//	{
-	//		if (tempPRN->GetDestroy()) {
-	//			delete * itr;
-	//			itr = playerRenderNodes.erase(itr);
-	//		}	
-	//	}
-	//}
 }
 
 void GraphicsPipeline::RenderPostprocessAndPresent()
@@ -727,6 +736,7 @@ void GraphicsPipeline::InitPath(Vector2 _groundSize)
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 }
 
 void GraphicsPipeline::RecursiveAddToPathRenderLists(RenderNode* node)

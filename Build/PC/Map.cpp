@@ -64,13 +64,13 @@ void Map::OnInitializeGUI()
 
 void Map::InitializeScores() 
 {
-	if (Game::Instance()->GetUser())
-	{
-		if (Game::Instance()->getUserID() == 0)
-		{
-			score = new Score(xDimension, yDimension, groundScoreAccuracy);
-		}
-	}
+	//if (Game::Instance()->GetUser())
+	//{
+	//	if (Game::Instance()->getUserID() == 0)
+	//	{
+	//		score = new Score(xDimension, yDimension, groundScoreAccuracy);
+	//	}
+	//}
 }
 
 void Map::LoadTextures()
@@ -106,8 +106,14 @@ void Map::OnCleanupScene()
 //--------------------------------------------------------------------------------------------//
 void Map::OnUpdateScene(float dt)
 {
-	if(Game::Instance()->getUserID() == 0)
-		score->UpdateScores();
+	if (Game::Instance()->getUserID() == 0)
+	{
+		for (uint i = 0; i < Game::Instance()->GetPlayerNumber();++i)
+		{
+			Game::Instance()->SetScore(i, GraphicsPipeline::Instance()->GetScore(i));
+		}
+	}
+		//score->UpdateScores();
 	Scene::OnUpdateScene(dt);
 
 	m_AccumTime += dt;

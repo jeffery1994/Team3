@@ -16,7 +16,7 @@
 :::::::::::::::::::::::::::::::::::::::::::::::::.::..:... ..  .
 															
 *****************************************************************************/
-#version 330 core
+#version 440 core
 #define SHADOWMAP_NUM  4
 
 //Per object
@@ -39,6 +39,8 @@ uniform sampler2DArrayShadow uShadowTex;
 uniform vec2  		uShadowSinglePixel;
 uniform float 		uNormalizedFarPlanes[SHADOWMAP_NUM - 1]; 
 uniform mat4 		uShadowTransform[SHADOWMAP_NUM];
+
+layout(binding = 0, offset = 0) uniform atomic_uint red;
 
 in Vertex	{
 	smooth vec3 	 worldPos;

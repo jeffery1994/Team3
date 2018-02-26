@@ -172,6 +172,8 @@ public:
 	inline Shader** GetAllShaders() { return shaders; }
 	inline Material** GetAllMaterials() { return materials; }
 
+	inline int GetScore(uint ID) { return scores[ID]; }
+
 	inline void AddPlayerRenderNode(RenderNode* playerRenderNode){ playerRenderNodes.push_back(playerRenderNode); }
 	void RemovePlayerRenderNode(RenderNode* node);
 
@@ -256,6 +258,9 @@ protected:
 	std::vector<RenderNode*>	pathRenderNodes;
 	GLuint		pathFBO;
 	GLuint		pathTex;
+	GLuint		scoreBuffer;
+
+	int scores[4];
 
 	//GUI
 	bool isMainMenu = false;
