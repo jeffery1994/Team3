@@ -159,46 +159,49 @@ void Score::UpdateGroundScore(Avatar* player) {
 	float halfxGrid = (float)(xOnGrid / 2);
 	float halfyGrid = (float)(yOnGrid / 2);
 
-	Vector2 playerPos = Vector2((player->GetPosition().x *groundScoreAccuracy) + (halfxGrid + (10 * groundScoreAccuracy)), (player->GetPosition().z *groundScoreAccuracy + halfyGrid + (10 * groundScoreAccuracy)));
+	Vector2 playerPos = Vector2((player->GetPosition().x *groundScoreAccuracy) + halfxGrid, (player->GetPosition().z *groundScoreAccuracy) + halfyGrid);
 
-	float plGridSize = player->GetSize() * groundScoreAccuracy * 10;
+	float plGridSize = (player->GetLife()/100) * groundScoreAccuracy;
 	int gridArea = xOnGrid * yOnGrid;
 	float radius = plGridSize * plGridSize;
-	
+
+	int x = (int)playerPos.x * xOnGrid;
+
 	// Runs through the square arount the center and finds the circle.
-	for (int i = (int)(playerPos.x - plGridSize); i <= playerPos.x; i++) {
-		for (int j = (int)(playerPos.y - plGridSize); j <= playerPos.y; j++) {
+	for (int i = (int)(x - (plGridSize * xOnGrid)); i <= x; i * xOnGrid) {
+		int y = (int)playerPos.y + i;
+		for (int j = (int)(y - plGridSize); j <= y; j++) {
 			// check if inside vector boundries
-			if ((i > 0 && j > 0) && (i + j < xOnGrid * yOnGrid - radius)) {
-				if ((i - playerPos.x)*(i - playerPos.x) + (j - playerPos.y)* (j - playerPos.y) <= radius) {
+			if ((i > 0 && j > 0) && (j < gridArea - radius)) {
+
+				if ((i - x)*(i - x) + (j - y)* (j - y) <= radius) {
 					// new position based on 2 dimensional position
-					int posi = i * (xOnGrid);
-					int posj = i * (xOnGrid)+j;
-					int xSym = (int)(playerPos.x* (xOnGrid)-(posi - playerPos.x* (xOnGrid)));
-					int ySym = (int)(i * (xOnGrid)+playerPos.y - (posj - (i * (xOnGrid)+playerPos.y)));
+					int xSym = (int)(x - (i - x)* xOnGrid);
+					int posy = (int)(j - i);
+					int ySym = (int)((y - (j - y)) - x);
 					// Thanks to symetry we take all 4 quadrants of the circle arount the center
-					ChangeGridScore(ground[posi + posj], player->GetColour());
-					ground[posi + posj] = player->GetColour();
-					ChangeGridScore(ground[posi + ySym], player->GetColour());
-					ground[posi + ySym] = player->GetColour();
-					ChangeGridScore(ground[xSym + posj], player->GetColour());
-					ground[xSym + posj] = player->GetColour();
+					ChangeGridScore(ground[j], player->GetColour());
+					ground[j] = player->GetColour();
+
+					ChangeGridScore(ground[i + ySym], player->GetColour());
+					ground[i + ySym] = player->GetColour();
+
+					ChangeGridScore(ground[xSym + posy], player->GetColour());
+					ground[xSym + posy] = player->GetColour();
+
 					ChangeGridScore(ground[xSym + ySym], player->GetColour());
 					ground[xSym + ySym] = player->GetColour();
 				}
 			}
 		}
+		i++;
 	}
 }
 
 // Decreases the score from previous team and increases the score to the new team.
 void Score::ChangeGridScore(Colour teamToDecrease, Colour teamToIncrease) {
-	if (teamToDecrease != teamToIncrease)
-	{
 		groundTeamScore[teamToDecrease] -= 1;
 		groundTeamScore[teamToIncrease] += 1;
-	}
-
 }
 
 // TODO: If needed update only the Capturable objects that got changed last frame
@@ -245,32 +248,40 @@ void Score::UpdateScoreForProjectiles() {
 	
 	Vector2 pPos = Vector2((pos.x * groundScoreAccuracy) + halfxGrid, (pos.z * groundScoreAccuracy) + halfyGrid);
 
-	int plGridSize = size * groundScoreAccuracy;
-	int radius = plGridSize * plGridSize;
+	int projGridSize = size * groundScoreAccuracy;
+	int gridArea = xOnGrid * yOnGrid;
+	int radius = projGridSize * projGridSize;
+
+	int x = (int)pPos.x * xOnGrid;
 
 	// Runs through the square arount the center and finds the circle.
-	for (int i = (int)(pPos.x - plGridSize); i <= pPos.x; i++) {
-		for (int j = (int)(pPos.y - plGridSize); j <= pPos.y; j++) {
+	for (int i = (int)(x - (projGridSize * xOnGrid)); i <= x; i * xOnGrid) {
+		int y = (int)pPos.y + i;
+		for (int j = (int)(y - projGridSize); j <= y; j++) {
 			// check if inside vector boundries
-			if ((i > 0 && j > 0) && (i + j < xOnGrid * yOnGrid - radius)) {
-				if ((i - pPos.x)*(i - pPos.x) + (j - pPos.y)* (j - pPos.y) <= radius) {
+			if ((i > 0 && j > 0) && (j < gridArea - radius)) {
+
+				if ((i - x)*(i - x) + (j - y)* (j - y) <= radius) {
 					// new position based on 2 dimensional position
-					int posi = i * (xOnGrid);
-					int posj = i * (xOnGrid)+j;
-					int xSym = (int)(pPos.x* (xOnGrid)-(posi - pPos.x* (xOnGrid)));
-					int ySym = (int)(i * (xOnGrid)+pPos.y - (posj - (i * (xOnGrid)+pPos.y)));
+					int xSym = (int)(x - (i - x)* xOnGrid);
+					int posy = (int)(j - i);
+					int ySym = (int)((y - (j - y)) - x);
 					// Thanks to symetry we take all 4 quadrants of the circle arount the center
-					ChangeGridScore(ground[posi + posj], colour);
-					ground[posi + posj] = colour;
-					ChangeGridScore(ground[posi + ySym], colour);
-					ground[posi + ySym] = colour;
-					ChangeGridScore(ground[xSym + posj], colour);
-					ground[xSym + posj] = colour;
+					ChangeGridScore(ground[j], colour);
+					ground[j] = colour;
+
+					ChangeGridScore(ground[i + ySym], colour);
+					ground[i + ySym] = colour;
+
+					ChangeGridScore(ground[xSym + posy], colour);
+					ground[xSym + posy] = colour;
+
 					ChangeGridScore(ground[xSym + ySym], colour);
 					ground[xSym + ySym] = colour;
 				}
 			}
 		}
+		i++;
 	}
 }
 

@@ -648,12 +648,6 @@ void GraphicsPipeline::RenderPath()
 		RecursiveAddToPathRenderLists(playerRenderNodes[i]);
 	}
 
-	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, scoreBuffer);
-
-	GLuint a[4] = { 0,0,0,0 };
-	glBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * 4, a);
-	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
-
 	Matrix4 projMatrix2 = Matrix4::Orthographic(-40, 40, -groundSize.x, groundSize.x, -groundSize.y, groundSize.y);
 	Matrix4	viewMatrix2 = Matrix4::Rotation(90, Vector3(1, 0, 0)) *Matrix4::Translation(Vector3(0.0f,-20.0f,0.0f));
 	glViewport(0, 0, (GLsizei)(groundSize.x*PIXELPERSIZE), (GLsizei)(groundSize.y*PIXELPERSIZE));
@@ -669,17 +663,6 @@ void GraphicsPipeline::RenderPath()
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	projViewMatrix = temp;
-
-	GLuint userCounters[4];
-	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, scoreBuffer);
-	// again we map the buffer to userCounters, but this time for read-only access
-	glGetBufferSubData(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint) * 4, userCounters);
-	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
-	scores[0] += userCounters[0];
-	scores[1] += userCounters[1];
-	scores[2] += userCounters[2];
-	scores[3] += userCounters[3];
-
 }
 
 void GraphicsPipeline::RenderPostprocessAndPresent()
