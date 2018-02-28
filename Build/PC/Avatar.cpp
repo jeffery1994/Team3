@@ -178,8 +178,11 @@ bool Avatar::PlayerCallbackFunction(PhysicsNode* self, PhysicsNode* collidingObj
 		collisionTimerActive = true;
 		collisionTimer = timeUntilInAir;
 		inAir = false;
-		((PlayerRenderNode*)Render()->GetChild())->SetIsInAir(false);
+		if (collidingObject->GetType() == BIG_NODE) {
+			((PlayerRenderNode*)Render()->GetChild())->SetIsInAir(false);
+		}
 	}
+	
 
 	return true;
 }

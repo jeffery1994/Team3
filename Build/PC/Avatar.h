@@ -69,6 +69,8 @@ protected:
 	float collisionTimer;
 	float timeUntilInAir;
 
+	int damageOnColis = 35;		//Damage applied to paintable objects on collision
+
 
 	// Boosts
 	PickupType activePickUp;
@@ -117,12 +119,14 @@ public:
 	Colour GetColour() { return col; }
 	void SetColour(Colour c) { col = c; }
 
+	int GetDamageOnColision()		{ return damageOnColis; }
+	void SetDamageOnColision(int x) { damageOnColis = x; }
+
 	WeaponType GetWeapon() { return weapon; }
 	void SetWeapon(WeaponType newWeapon) { weapon = newWeapon; }
 
 	bool IsPlayerInAir() { return inAir; }
-	void SetInAir(bool b) { inAir = b; ((PlayerRenderNode*)Render()->GetChild())->SetIsInAir(b);
-	}
+	void SetInAir(bool b) { inAir = b; ((PlayerRenderNode*)Render()->GetChild())->SetIsInAir(b);}
 	
 	Vector4 GetColourRGBA() { return colour; }
 

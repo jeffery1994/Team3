@@ -47,6 +47,10 @@ public:
 
 protected:
 
+	//Team Based Life Points for the object.
+	int maxObjectLife = 100;
+	int lifePoints[START_COLOUR];
+
 	int scoreValue;
 	Colour colour;
 };

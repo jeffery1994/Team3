@@ -18,6 +18,9 @@ protected:
 	bool exploded; //prevent double explosion at lower framerates
 
 	Vector3 predictedCollisionPosition; //position of pnode, not position of contact point
+
+	int damageOnColis = 15;		//Damage applied to paintable objects on collision
+
 public:
 	Projectile();
 	Projectile(Colour col, const Vector4& RGBA, Vector3 pos, Vector3 Velocity, float size, float inverseMass, PhysNodeType type, int projectileWorth, const std::string& name = ""); //spherical projectile
@@ -31,6 +34,9 @@ public:
 	void SetPredictedCollisionPosition(Vector3 pcp) {
 		predictedCollisionPosition = pcp;
 	}
+
+	inline int GetDamageOnColision() { return damageOnColis; }
+	inline void SetDamageOnColision(int x) { damageOnColis = x; }
 
 	void predictCollisionPosition(Vector3 pos, Vector3 vel);
 	

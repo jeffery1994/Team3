@@ -111,6 +111,10 @@ CaptureArea::CaptureArea(Vector3 pos, Vector3 halfdims, int scoreValue, Colour c
 			std::placeholders::_2
 		)
 	);
+
+	for (uint i = 0; i < START_COLOUR; i++) {
+		lifePoints[i] = maxObjectLife;
+	}
 }
 
 void CaptureArea::SetColour(Colour c)
@@ -149,16 +153,104 @@ void CaptureArea::SetColour(Colour c)
 	Render()->SetChildBaseColor(paintColour);
 }
 
-
+//Nikos Fragkas
+//28/02
 bool CaptureArea::CaptureAreaCallbackFunction(PhysicsNode* self, PhysicsNode* collidingObject)
 {
+	
 	if (collidingObject->GetType() == PLAYER)
 	{
-		this->SetColour(((Avatar*)collidingObject->GetParent())->GetColour());
+		Avatar* player = ((Avatar*)collidingObject->GetParent());
+		switch (player->GetColour())
+		{
+		case RED:
+			lifePoints[RED] -= player->GetDamageOnColision();
+			break;
+		case GREEN:
+			lifePoints[GREEN] -= player->GetDamageOnColision();
+			break;
+		case BLUE:
+			lifePoints[BLUE] -= player->GetDamageOnColision();
+			break;
+		case PINK:
+			lifePoints[PINK] -= player->GetDamageOnColision();
+			break;
+		case START_COLOUR:
+			break;
+		default:
+			break;
+		}
+
+		//If any Player managed to inflict enough damage
+		if (lifePoints[player->GetColour()] <= 0) {
+			switch (player->GetColour()) {
+			case RED:
+				this->SetColour(player->GetColour());
+				break;
+
+			case GREEN:
+				this->SetColour(player->GetColour());
+				break;
+
+			case BLUE:
+				this->SetColour(player->GetColour());
+				break;
+
+			case PINK:
+				this->SetColour(player->GetColour());
+				break;
+			}
+			for (uint i = 0; i < START_COLOUR; i++) {
+				lifePoints[i] = maxObjectLife;
+			}
+		}
 	}
 	else if (collidingObject->GetType() == PROJECTILE || collidingObject->GetType() == SPRAY)
 	{
-		this->SetColour(((Projectile*)collidingObject->GetParent())->GetColour());
+		Projectile* project = ((Projectile*)collidingObject->GetParent());
+		switch (project->GetColour())
+		{
+		case RED:
+			lifePoints[RED] -= project->GetDamageOnColision();
+			break;
+		case GREEN:
+			lifePoints[GREEN] -= project->GetDamageOnColision();
+			break;
+		case BLUE:
+			lifePoints[BLUE] -= project->GetDamageOnColision();
+			break;
+		case PINK:
+			lifePoints[PINK] -= project->GetDamageOnColision();
+			break;
+		case START_COLOUR:
+			break;
+		default:
+			break;
+		}
+
+		//If any Projectile managed to inflict enough damage
+		if (lifePoints[project->GetColour()] <= 0) {
+			switch (project->GetColour()) {
+			case GREEN:
+				this->SetColour(project->GetColour());
+				break;
+
+			case RED:
+				this->SetColour(project->GetColour());
+				break;
+
+			case BLUE:
+				this->SetColour(project->GetColour());
+				break;
+
+			case PINK:
+				this->SetColour(project->GetColour());
+				break;
+			}
+			for (uint i = 0; i < START_COLOUR; i++) {
+				lifePoints[i] = maxObjectLife;
+			}
+		}
 	}
 
 	//Return true to enable collision resolution
