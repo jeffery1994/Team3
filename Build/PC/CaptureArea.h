@@ -47,6 +47,9 @@ public:
 
 protected:
 
+	void InflictDamage(Colour colour, int damage);	// Inflict player or projectile damage to Capture Area
+	void ChangeOwningTeam(Colour newTeam);			// If enough damage is inflicted the new team takes the area
+
 	//Team Based Life Points for the object.
 	int maxObjectLife = 100;
 	int lifePoints[START_COLOUR];

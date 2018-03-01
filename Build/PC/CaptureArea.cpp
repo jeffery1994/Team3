@@ -154,109 +154,78 @@ void CaptureArea::SetColour(Colour c)
 }
 
 //Nikos Fragkas
-//28/02
+//01/03
 bool CaptureArea::CaptureAreaCallbackFunction(PhysicsNode* self, PhysicsNode* collidingObject)
 {
 	
 	if (collidingObject->GetType() == PLAYER)
 	{
-		Avatar* player = ((Avatar*)collidingObject->GetParent());
-		switch (player->GetColour())
-		{
-		case RED:
-			lifePoints[RED] -= player->GetDamageOnColision();
-			break;
-		case GREEN:
-			lifePoints[GREEN] -= player->GetDamageOnColision();
-			break;
-		case BLUE:
-			lifePoints[BLUE] -= player->GetDamageOnColision();
-			break;
-		case PINK:
-			lifePoints[PINK] -= player->GetDamageOnColision();
-			break;
-		case START_COLOUR:
-			break;
-		default:
-			break;
-		}
-
-		//If any Player managed to inflict enough damage
-		if (lifePoints[player->GetColour()] <= 0) {
-			switch (player->GetColour()) {
-			case RED:
-				this->SetColour(player->GetColour());
-				break;
-
-			case GREEN:
-				this->SetColour(player->GetColour());
-				break;
-
-			case BLUE:
-				this->SetColour(player->GetColour());
-				break;
-
-			case PINK:
-				this->SetColour(player->GetColour());
-				break;
-			}
-			for (uint i = 0; i < START_COLOUR; i++) {
-				lifePoints[i] = maxObjectLife;
-			}
-		}
+		InflictDamage(((Avatar*)collidingObject->GetParent())->GetColour(), ((Avatar*)collidingObject->GetParent())->GetDamageOnColision());
 	}
 	else if (collidingObject->GetType() == PROJECTILE || collidingObject->GetType() == SPRAY)
 	{
-		Projectile* project = ((Projectile*)collidingObject->GetParent());
-		switch (project->GetColour())
-		{
-		case RED:
-			lifePoints[RED] -= project->GetDamageOnColision();
-			break;
-		case GREEN:
-			lifePoints[GREEN] -= project->GetDamageOnColision();
-			break;
-		case BLUE:
-			lifePoints[BLUE] -= project->GetDamageOnColision();
-			break;
-		case PINK:
-			lifePoints[PINK] -= project->GetDamageOnColision();
-			break;
-		case START_COLOUR:
-			break;
-		default:
-			break;
-		}
-
-		//If any Projectile managed to inflict enough damage
-		if (lifePoints[project->GetColour()] <= 0) {
-			switch (project->GetColour()) {
-			case GREEN:
-				this->SetColour(project->GetColour());
-				break;
-
-			case RED:
-				this->SetColour(project->GetColour());
-				break;
-
-			case BLUE:
-				this->SetColour(project->GetColour());
-				break;
-
-			case PINK:
-				this->SetColour(project->GetColour());
-				break;
-			}
-			for (uint i = 0; i < START_COLOUR; i++) {
-				lifePoints[i] = maxObjectLife;
-			}
-		}
+		InflictDamage(((Projectile*)collidingObject->GetParent())->GetColour(), ((Projectile*)collidingObject->GetParent())->GetDamageOnColision());
 	}
-
 	//Return true to enable collision resolution
 	return true;
-
 }
+
+//Nikos Fragkas
+//01/03
+// Inflict player or projectile damage to Capture Area
+void CaptureArea::InflictDamage(Colour colour, int damage) {
+	switch (colour)
+	{
+	case RED:
+		lifePoints[RED] -= damage;
+		break;
+	case GREEN:
+		lifePoints[GREEN] -= damage;
+		break;
+	case BLUE:
+		lifePoints[BLUE] -= damage;
+		break;
+	case PINK:
+		lifePoints[PINK] -= damage;
+		break;
+	case START_COLOUR:
+		break;
+	default:
+		break;
+	}
+
+	//If any Team managed to inflict enough damage
+	if (lifePoints[colour] <= 0) {
+		ChangeOwningTeam(colour);
+	}
+}
+
+//Nikos Fragkas
+//01/03
+// If enough damage is inflicted the new team takes the area
+void CaptureArea::ChangeOwningTeam(Colour newTeam) {
+	switch (newTeam) {
+	case RED:
+		this->SetColour(newTeam);
+		break;
+
+	case GREEN:
+		this->SetColour(newTeam);
+		break;
+
+	case BLUE:
+		this->SetColour(newTeam);
+		break;
+
+	case PINK:
+		this->SetColour(newTeam);
+		break;
+	}
+	for (uint i = 0; i < START_COLOUR; i++) {
+		lifePoints[i] = maxObjectLife;
+	}
+}
+
 
 CaptureArea::~CaptureArea()
 {

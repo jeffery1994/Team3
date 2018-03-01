@@ -69,7 +69,7 @@ protected:
 	float collisionTimer;
 	float timeUntilInAir;
 
-	int damageOnColis = 35;		//Damage applied to paintable objects on collision
+	int damageOnColis = 2;		//Damage applied to paintable objects on collision
 
 
 	// Boosts

@@ -88,7 +88,7 @@ void Map::BuildGround(Vector2 dimensions) {
 	this->AddGameObject(eastWall);
 	GameObject* westWall = CommonUtils::InvisibleWall(
 		"WestWall",
-		Vector3(0.0f, 50, -dimensions.x - 1),
+		Vector3(0.0f, 50, -dimensions.y - 1),
 		Vector3(dimensions.x, 50.f, 1));
 	this->AddGameObject(westWall);
 
