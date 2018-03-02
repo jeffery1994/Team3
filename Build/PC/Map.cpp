@@ -1,5 +1,5 @@
 #include "Map.h"
-
+#include <ncltech\Heightmap.h>
 //--------------------------------------------------------------------------------------------//
 // Initialization
 //--------------------------------------------------------------------------------------------//
@@ -62,46 +62,56 @@ void Map::OnInitializeGUI()
 }
 
 void Map::BuildGround(Vector2 dimensions) {
-	GameObject* ground = CommonUtils::BuildCuboidObject(
-		"Ground",
-		Vector3(0.0f, 0.0f, 0.0f),			// Centre Position
-		Vector3(dimensions.x, 1.0f, dimensions.y),		// Scale
+	//GameObject* ground = CommonUtils::BuildCuboidObject(
+	//	"Ground",
+	//	Vector3(0.0f, 0.0f, 0.0f),			// Centre Position
+	//	Vector3(dimensions.x, 1.0f, dimensions.y),		// Scale
+	//	true,
+	//	0.0f,
+	//	true,
+	//	false,								// Dragable By User
+	//	BIG_NODE,
+	//	Vector4(0.6f, 0.6f, 0.6f, 1.0f),
+	//	MATERIALTYPE::Ground);	// Colour
+	//this->AddGameObject(ground);
+
+	GameObject* heightMap = new Heightmap(
+		"Heightmap",
+		Vector3(0, 0, 0),
+		Vector3(dimensions.x/2,1,dimensions.y/2),
+		1,
 		true,
-		0.0f,
 		true,
-		false,								// Dragable By User
-		BIG_NODE,
-		Vector4(0.6f, 0.6f, 0.6f, 1.0f),
-		MATERIALTYPE::Ground);	// Colour
-	this->AddGameObject(ground);
+		Vector4(0.6f, 0.6f, 0.6f, 1.0f));
+	this->AddGameObject(heightMap);
 
-	GameObject* upWall = CommonUtils::InvisibleWall(
-		"UpWall",
-		Vector3(-1.0f, 80, -1.0f),
-		Vector3(dimensions.x+2, 2.0f, dimensions.y+2));
-	this->AddGameObject(upWall);
+	//GameObject* upWall = CommonUtils::InvisibleWall(
+	//	"UpWall",
+	//	Vector3(-1.0f, 80, -1.0f),
+	//	Vector3(dimensions.x+2, 2.0f, dimensions.y+2));
+	//this->AddGameObject(upWall);
 
-	GameObject* eastWall = CommonUtils::InvisibleWall(
-		"EastWall",
-		Vector3(0.0f, 50, dimensions.x + 5),
-		Vector3(dimensions.x, 50.f, 5));
-	this->AddGameObject(eastWall);
-	GameObject* westWall = CommonUtils::InvisibleWall(
-		"WestWall",
-		Vector3(0.0f, 50, -dimensions.x - 5),
-		Vector3(dimensions.x, 50.f, 5));
-	this->AddGameObject(westWall);
+	//GameObject* eastWall = CommonUtils::InvisibleWall(
+	//	"EastWall",
+	//	Vector3(0.0f, 50, dimensions.x + 5),
+	//	Vector3(dimensions.x, 50.f, 5));
+	//this->AddGameObject(eastWall);
+	//GameObject* westWall = CommonUtils::InvisibleWall(
+	//	"WestWall",
+	//	Vector3(0.0f, 50, -dimensions.x - 5),
+	//	Vector3(dimensions.x, 50.f, 5));
+	//this->AddGameObject(westWall);
 
-	GameObject* northWall = CommonUtils::InvisibleWall(
-		"NorthWall",
-		Vector3(dimensions.x + 5, 50, 0.0f),
-		Vector3(5, 50.f, dimensions.y));
-	this->AddGameObject(northWall);
-	GameObject* southWall = CommonUtils::InvisibleWall(
-		"SouthWall",
-		Vector3(-dimensions.x - 5, 50, 0.0f),
-		Vector3(5, 50.f, dimensions.y));
-	this->AddGameObject(southWall);
+	//GameObject* northWall = CommonUtils::InvisibleWall(
+	//	"NorthWall",
+	//	Vector3(dimensions.x + 5, 50, 0.0f),
+	//	Vector3(5, 50.f, dimensions.y));
+	//this->AddGameObject(northWall);
+	//GameObject* southWall = CommonUtils::InvisibleWall(
+	//	"SouthWall",
+	//	Vector3(-dimensions.x - 5, 50, 0.0f),
+	//	Vector3(5, 50.f, dimensions.y));
+	//this->AddGameObject(southWall);
 }
 
 void Map::LoadTextures()

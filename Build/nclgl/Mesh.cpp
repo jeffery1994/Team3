@@ -356,13 +356,13 @@ Mesh* Mesh::GenerateMesh(int w, int h, float s) {
 
 	for (int i = 0; i < w; ++i) {
 			for (int j = 0; j < h; ++j) {
-				m->vertices[c] = Vector3(s*i,s*j, 0.0f);
-				m->vertices[c + 1] = Vector3(s*i,s*(j+1), 0.0f);
-				m->vertices[c + 2] = Vector3(s*(i + 1),s*j, 0.0f);
+				m->vertices[c] = Vector3(s*i,0.0f,s*j);
+				m->vertices[c + 1] = Vector3(s*i, 0.0f, s*(j + 1));
+				m->vertices[c + 2] = Vector3(s*(i + 1), 0.0f, s*j);
 
-				m->vertices[c + 3] = Vector3(s*i, s*(j + 1), 0.0f);
-				m->vertices[c + 4] = Vector3(s*(i + 1),s*(j + 1), 0.0f);
-				m->vertices[c + 5] = Vector3(s*(i + 1), s*j, 0.0f);
+				m->vertices[c + 3] = Vector3(s*i, 0.0f, s*(j + 1));
+				m->vertices[c + 4] = Vector3(s*(i + 1), 0.0f, s*(j + 1));
+				m->vertices[c + 5] = Vector3(s*(i + 1), 0.0f, s*j);
 
 
 				m->textureCoords[c]		= Vector2((float)i / (float)w		, (float)j / (float)h);
@@ -377,28 +377,15 @@ Mesh* Mesh::GenerateMesh(int w, int h, float s) {
 			}
 		}
 
-	//for (int i = 0; i < w; ++i) {
-	//	for (int j = 0; j < h; ++j) {
-	//		m->vertices[c] = Vector3(s*i,s*j, 0.0f);
-	//		m->vertices[c + 1] = Vector3(s*i,s*(j+1), 0.0f);
-	//		m->vertices[c + 2] = Vector3(s*(i+1),s*j, 0.0f);
-	//		m->vertices[c + 3] = Vector3(s*(i+1),s*(j+1), 0.0f);
-
-	//		m->textureCoords[c] = Vector2(0.0f, 1.0f);
-	//		m->textureCoords[c + 1] = Vector2(0.0f, 0.0f);
-	//		m->textureCoords[c + 2] = Vector2(1.0f, 1.0f);
-	//		m->textureCoords[c + 3] = Vector2(1.0f, 0.0f);
-
-	//		c += 4;
-	//	}
-	//}
-
 	for (uint i = 0; i < m->numVertices; ++i) {
 		m->colours[i] = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 		m->normals[i] = Vector3(0.0f, 0.0f, -1.0f);
 		m->tangents[i] = Vector3(1.0f, 0.0f, 0.0f);
 	}
 
+	m->GenerateNormals();
+	m->GenerateTangents();
+	m->ClearBuffers();
 	m->BufferData();
 
 	return m;

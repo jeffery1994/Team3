@@ -145,6 +145,8 @@
     <ClCompile Include="FixedWorldPartition.cpp" />
     <ClCompile Include="GeometryUtils.cpp" />
     <ClCompile Include="GraphicsPipeline.cpp" />
+    <ClCompile Include="Heightmap.cpp" />
+    <ClCompile Include="HeightmapCollisionShape.cpp" />
     <ClCompile Include="Hull.cpp" />
     <ClCompile Include="Manifold.cpp" />
     <ClCompile Include="NetworkBase.cpp" />
@@ -169,6 +171,8 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GeometryUtils.h" />
     <ClInclude Include="GraphicsPipeline.h" />
+    <ClInclude Include="Heightmap.h" />
+    <ClInclude Include="HeightmapCollisionShape.h" />
     <ClInclude Include="Hull.h" />
     <ClInclude Include="Manifold.h" />
     <ClInclude Include="MultiGameObject.h" />
